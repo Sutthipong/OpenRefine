@@ -21,9 +21,6 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import com.google.api.services.drive.model.User;
-import com.google.api.services.fusiontables.Fusiontables;
-import com.google.api.services.fusiontables.model.Table;
-import com.google.api.services.fusiontables.model.TableList;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
@@ -91,7 +88,6 @@ public class GDataImportingController implements ImportingController {
             
             try {
                 listSpreadsheets(GoogleAPIExtension.getDriveService(token), writer);
-                listFusionTables(FusionTableHandler.getFusionTablesService(token), writer);
             }  catch (Exception e) {
                 logger.error("doListDocuments exception:" + ExceptionUtils.getStackTrace(e));
             }  finally {
@@ -139,31 +135,6 @@ public class GDataImportingController implements ImportingController {
         }
     }
     
-    private void listFusionTables(Fusiontables service, JsonGenerator writer)
-        throws IOException {
-        
-        Fusiontables.Table.List listTables = service.table().list();
-        TableList tablelist = listTables.execute();
-        
-        if (tablelist == null || tablelist.getItems() == null)
-            return;
-        
-        for (Table table : tablelist.getItems()) {
-            String id = table.getTableId();
-            String name = table.getName();
-            String link = "https://www.google.com/fusiontables/DataSource?docid=" + id;
-            
-            // Add JSON object to our stream
-            writer.writeStartObject();
-            writer.writeStringField("docId", id);
-            writer.writeStringField("docLink", link);
-            writer.writeStringField("docSelfLink", link);
-            writer.writeStringField("title", name);
-            writer.writeStringField("type", "table");
-            writer.writeEndObject();
-        }
-    }
-    
     private void doInitializeParserUI(
         HttpServletRequest request, HttpServletResponse response, Properties parameters)
             throws ServletException, IOException {
@@ -190,12 +161,14 @@ public class GDataImportingController implements ImportingController {
             
             List<Sheet> worksheetEntries =
                     getWorksheetEntriesForDoc(token, spreadSheetId);
+            int workSheetIndex = 0;
             for (Sheet sheet : worksheetEntries) {
                 ObjectNode worksheetO = ParsingUtilities.mapper.createObjectNode();
                 JSONUtilities.safePut(worksheetO, "name", sheet.getProperties().getTitle());
                 JSONUtilities.safePut(worksheetO, "rows", sheet.getProperties().getGridProperties().getRowCount());
                 JSONUtilities.safePut(worksheetO, "link", 
                         "https://sheets.googleapis.com/v4/spreadsheets/" + spreadSheetId + "/values/" + sheet.getProperties().getTitle());
+                JSONUtilities.safePut(worksheetO, "worksheetIndex", workSheetIndex++);
                 
                 JSONUtilities.append(worksheets, worksheetO);
             }

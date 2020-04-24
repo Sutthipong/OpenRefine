@@ -68,7 +68,7 @@ import com.google.refine.util.ParsingUtilities;
  */
 public abstract class ProjectManager {
     // last n expressions used across all projects
-    static protected final int s_expressionHistoryMax = 100;
+    static public final int EXPRESSION_HISTORY_MAX = 100;
 
     // If a project has been idle this long, flush it from memory
     static protected final int PROJECT_FLUSH_DELAY = 1000 * 60 * 15; // 15 minutes
@@ -84,9 +84,9 @@ public abstract class ProjectManager {
     final static Logger logger = LoggerFactory.getLogger("ProjectManager");
 
     /**
-     *  What caches the joins between projects.
+     *  What caches the lookups of projects.
      */
-    transient protected InterProjectModel _interProjectModel = new InterProjectModel();
+    transient protected LookupCacheManager _lookupCacheManager = new LookupCacheManager();
 
     /**
      *  Flag for heavy operations like creating or importing projects.  Workspace saves are skipped while it's set.
@@ -345,13 +345,12 @@ public abstract class ProjectManager {
     }
 
     /**
-     * Gets the InterProjectModel from memory
+     * Gets the LookupCacheManager from memory
      */
     @JsonIgnore
-    public InterProjectModel getInterProjectModel() {
-        return _interProjectModel;
+    public LookupCacheManager getLookupCacheManager() {
+        return _lookupCacheManager;
     }
-
 
     /**
      * Gets the project metadata from memory
@@ -450,7 +449,7 @@ public abstract class ProjectManager {
                 ObjectNode node = (ObjectNode)jsonObj;
                 if (node.get("name").asText("").equals(placeHolderJsonObj.get("name").asText(""))) {
                     found = true;
-                    node.put("display", placeHolderJsonObj.get("display"));
+                    node.set("display", placeHolderJsonObj.get("display"));
                     break;
                 }
             }
@@ -610,7 +609,7 @@ public abstract class ProjectManager {
     * @param ps
     */
    static protected void preparePreferenceStore(PreferenceStore ps) {
-       ps.put("scripting.expressions", new TopList(s_expressionHistoryMax));
+       ps.put("scripting.expressions", new TopList(EXPRESSION_HISTORY_MAX));
        ps.put("scripting.starred-expressions", new TopList(Integer.MAX_VALUE));
    }
 }

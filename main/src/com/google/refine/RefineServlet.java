@@ -50,6 +50,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,16 +64,13 @@ import edu.mit.simile.butterfly.Butterfly;
 import edu.mit.simile.butterfly.ButterflyModule;
 
 public class RefineServlet extends Butterfly {
-    static private String ASSIGNED_VERSION = "3.2-beta";
+    static private String ASSIGNED_VERSION = "3.4-SNAPSHOT";
     
     static public String VERSION = "";
     static public String REVISION = "";
     static public String FULL_VERSION = "";
     static public String FULLNAME = "OpenRefine ";
 
-
-    static public final String AGENT_ID = "/en/google_refine"; // TODO: Unused?  Freebase ID
-    
     static final long serialVersionUID = 2386057901503517403L;
 
     static private final String JAVAX_SERVLET_CONTEXT_TEMPDIR = "javax.servlet.context.tempdir";
@@ -203,10 +201,10 @@ public class RefineServlet extends Butterfly {
                     command.doDelete(request, response);
                     logger.trace("< DELETE {}", commandKey);
                 } else {
-                    response.sendError(405);
+                    response.sendError(HttpStatus.SC_METHOD_NOT_ALLOWED);
                 }
             } else {
-                response.sendError(404);
+                response.sendError(HttpStatus.SC_NOT_FOUND);
             }
         } else {
             super.service(request, response);

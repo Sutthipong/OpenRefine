@@ -54,6 +54,7 @@ function registerCommands() {
   var RS = Packages.com.google.refine.RefineServlet;
 
   RS.registerCommand(module, "get-version", new Packages.com.google.refine.commands.GetVersionCommand());
+  RS.registerCommand(module, "get-csrf-token", new Packages.com.google.refine.commands.GetCSRFTokenCommand());
 
   RS.registerCommand(module, "get-importing-configuration", new Packages.com.google.refine.commands.importing.GetImportingConfigurationCommand());
   RS.registerCommand(module, "create-importing-job", new Packages.com.google.refine.commands.importing.CreateImportingJobCommand());
@@ -68,14 +69,13 @@ function registerCommands() {
 
   RS.registerCommand(module, "get-project-metadata", new Packages.com.google.refine.commands.project.GetProjectMetadataCommand());
   RS.registerCommand(module, "get-all-project-metadata", new Packages.com.google.refine.commands.workspace.GetAllProjectMetadataCommand());
-  RS.registerCommand(module, "set-metaData", new Packages.com.google.refine.commands.project.SetProjectMetadataCommand());
+  RS.registerCommand(module, "set-project-metadata", new Packages.com.google.refine.commands.project.SetProjectMetadataCommand());
   RS.registerCommand(module, "get-all-project-tags", new Packages.com.google.refine.commands.workspace.GetAllProjectTagsCommand());
   RS.registerCommand(module, "set-project-tags", new Packages.com.google.refine.commands.project.SetProjectTagsCommand());
 
   RS.registerCommand(module, "delete-project", new Packages.com.google.refine.commands.project.DeleteProjectCommand());
   RS.registerCommand(module, "rename-project", new Packages.com.google.refine.commands.project.RenameProjectCommand());
-  RS.registerCommand(module, "set-project-metadata", new Packages.com.google.refine.commands.project.SetProjectMetadataCommand());
-
+  
   RS.registerCommand(module, "get-models", new Packages.com.google.refine.commands.project.GetModelsCommand());
   RS.registerCommand(module, "get-rows", new Packages.com.google.refine.commands.row.GetRowsCommand());
   RS.registerCommand(module, "get-processes", new Packages.com.google.refine.commands.history.GetProcessesCommand());
@@ -240,7 +240,8 @@ function registerImporting() {
   IM.registerExtension(".tsv", "text/line-based/*sv");
 
   IM.registerExtension(".xml", "text/xml");
-
+  IM.registerExtension(".atom", "text/xml");
+  
   IM.registerExtension(".json", "text/json");
   IM.registerExtension(".js", "text/json");
 
@@ -250,6 +251,8 @@ function registerImporting() {
   IM.registerExtension(".ods", "text/xml/ods");
   
   IM.registerExtension(".nt", "text/rdf/nt");
+  IM.registerExtension(".ntriples", "text/rdf/nt");
+  
   IM.registerExtension(".n3", "text/rdf/n3");
   IM.registerExtension(".ttl", "text/rdf/ttl");
   IM.registerExtension(".jsonld", "text/rdf/ld+json");
@@ -267,6 +270,7 @@ function registerImporting() {
   IM.registerMimeType("text/csv", "text/line-based/*sv");
   IM.registerMimeType("text/x-csv", "text/line-based/*sv");
   IM.registerMimeType("text/tab-separated-value", "text/line-based/*sv");
+  IM.registerMimeType("text/tab-separated-values", "text/line-based/*sv");
 
   IM.registerMimeType("text/fixed-width", "text/line-based/fixed-width");
   
@@ -274,8 +278,11 @@ function registerImporting() {
   IM.registerMimeType("text/n3", "text/rdf/n3");
   IM.registerMimeType("text/rdf+n3", "text/rdf/n3");
   IM.registerMimeType("text/turtle", "text/rdf/ttl");
+  IM.registerMimeType("application/xml", "text/xml");
+  IM.registerMimeType("text/xml", "text/xml");
   IM.registerMimeType("application/rdf+xml", "text/rdf/xml");
   IM.registerMimeType("application/ld+json", "text/rdf/ld+json");
+  IM.registerMimeType("application/atom+xml", "text/xml");
 
   IM.registerMimeType("application/msexcel", "binary/text/xml/xls/xlsx");
   IM.registerMimeType("application/x-msexcel", "binary/text/xml/xls/xlsx");
@@ -516,6 +523,7 @@ function init() {
       "styles/widgets/slider-widget.less",
 
       "styles/views/data-table-view.less",
+      "styles/views/column-join.less",
 
       "styles/dialogs/expression-preview-dialog.less",
       "styles/dialogs/clustering-dialog.less",

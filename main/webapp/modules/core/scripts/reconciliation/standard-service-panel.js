@@ -44,7 +44,7 @@ ReconStandardServicePanel.prototype._guessTypes = function(f) {
   var self = this;
   var dismissBusy = DialogSystem.showBusy();
 
-  $.post(
+  Refine.postCSRF(
     "command/core/guess-types-of-column?" + $.param({
       project: theProject.id, 
       columnName: this._column.name,
@@ -74,7 +74,8 @@ ReconStandardServicePanel.prototype._guessTypes = function(f) {
 
       dismissBusy();
       f();
-    }
+    },
+    "json"
   );
 };
 
@@ -196,7 +197,7 @@ ReconStandardServicePanel.prototype._populatePanel = function() {
     var td2 = tr.insertCell(2);
 
     $(td0).html(column.name);
-    $('<input type="checkbox" />')
+    $('<input type="checkbox" name="include" />')
     .attr("columnName", column.name)
     .appendTo(td1);
     $('<input size="25" name="property" />')
@@ -221,6 +222,10 @@ ReconStandardServicePanel.prototype._wireEvents = function() {
     var suggestOptions = $.extend({}, this._service.suggest.type);
     suggestOptions.key = null;
     suggestOptions.query_param_name = "prefix";
+    // CORS/JSONP support
+    if (this._service.ui && this._service.ui.access) {
+      suggestOptions.access = this._service.ui.access;
+    }
     input.suggestT(suggestOptions);
   }
 
@@ -245,8 +250,12 @@ ReconStandardServicePanel.prototype._rewirePropertySuggests = function(type) {
     var suggestOptions = $.extend({}, this._service.suggest.property);
     suggestOptions.key = null;
     suggestOptions.query_param_name = "prefix";
+    // CORS/JSONP support
+    if (this._service.ui && this._service.ui.access) {
+      suggestOptions.access = this._service.ui.access;
+    }
     if (type) {
-      suggestOptions.ac_param = { schema: typeof type == "string" ? type : type.id };
+      suggestOptions.type = typeof type == "string" ? type : type.id;
     }
     inputs.suggestP(suggestOptions);
   }
@@ -264,6 +273,7 @@ ReconStandardServicePanel.prototype.start = function() {
   }
 
   var choices = this._panel.find('input[name="type-choice"]:checked');
+  var include = this._panel.find('input[name="include"]');
   if (choices !== null && choices.length > 0) {
     if (choices[0].value == '-') {
       type = null;
@@ -278,9 +288,9 @@ ReconStandardServicePanel.prototype.start = function() {
   var columnDetails = [];
   $.each(
     this._panel.find('input[name="property"]'),
-    function() {
+    function(index) {
       var property = $(this).data("data.suggest");
-      if (property && property.id) {
+      if (property && property.id && include[index].checked) {
         columnDetails.push({
           column: this.getAttribute("columnName"),
           property: {
@@ -290,7 +300,7 @@ ReconStandardServicePanel.prototype.start = function() {
         });
       } else {
         var property = $.trim(this.value);
-        if (property) {
+        if (property && include[index].checked) {
           columnDetails.push({
             column: this.getAttribute("columnName"),
             property: {

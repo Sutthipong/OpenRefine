@@ -23,7 +23,7 @@
  ******************************************************************************/
 package org.openrefine.wikidata.exporters;
 
-import static org.junit.Assert.assertEquals;
+import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -33,22 +33,17 @@ import java.util.Properties;
 
 import org.openrefine.wikidata.schema.WikibaseSchema;
 import org.openrefine.wikidata.testing.TestingData;
+import org.openrefine.wikidata.testing.WikidataRefineTest;
 import org.openrefine.wikidata.updates.ItemUpdate;
 import org.openrefine.wikidata.updates.ItemUpdateBuilder;
 import org.testng.annotations.Test;
 import org.wikidata.wdtk.datamodel.helpers.Datamodel;
-import org.wikidata.wdtk.datamodel.interfaces.Claim;
-import org.wikidata.wdtk.datamodel.interfaces.ItemIdValue;
-import org.wikidata.wdtk.datamodel.interfaces.Snak;
-import org.wikidata.wdtk.datamodel.interfaces.SnakGroup;
-import org.wikidata.wdtk.datamodel.interfaces.Statement;
-import org.wikidata.wdtk.datamodel.interfaces.StatementRank;
+import org.wikidata.wdtk.datamodel.interfaces.*;
 
 import com.google.refine.browsing.Engine;
 import com.google.refine.model.Project;
-import com.google.refine.tests.RefineTest;
 
-public class QuickStatementsExporterTest extends RefineTest {
+public class QuickStatementsExporterTest extends WikidataRefineTest {
 
     private QuickStatementsExporter exporter = new QuickStatementsExporter();
     private ItemIdValue newIdA = TestingData.newIdA;
@@ -91,9 +86,24 @@ public class QuickStatementsExporterTest extends RefineTest {
     @Test
     public void testNameDesc()
             throws IOException {
+    	/**
+    	 * Adding labels and description without overriding is not supported by QS, so
+    	 * we fall back on adding them with overriding.
+    	 */
+        ItemUpdate update = new ItemUpdateBuilder(qid1)
+                .addLabel(Datamodel.makeMonolingualTextValue("some label", "en"), true)
+                .addDescription(Datamodel.makeMonolingualTextValue("some description", "en"), true)
+                .build();
+
+        assertEquals("Q1377\tLen\t\"some label\"\n" + "Q1377\tDen\t\"some description\"\n", export(update));
+    }
+    
+    @Test
+    public void testOptionalNameDesc()
+            throws IOException {
         ItemUpdate update = new ItemUpdateBuilder(newIdA)
-                .addLabel(Datamodel.makeMonolingualTextValue("my new item", "en"))
-                .addDescription(Datamodel.makeMonolingualTextValue("isn't it awesome?", "en"))
+                .addLabel(Datamodel.makeMonolingualTextValue("my new item", "en"), false)
+                .addDescription(Datamodel.makeMonolingualTextValue("isn't it awesome?", "en"), false)
                 .addAlias(Datamodel.makeMonolingualTextValue("fabitem", "en")).build();
 
         assertEquals("CREATE\n" + "LAST\tLen\t\"my new item\"\n" + "LAST\tDen\t\"isn't it awesome?\"\n"
@@ -122,6 +132,35 @@ public class QuickStatementsExporterTest extends RefineTest {
         ItemUpdate update = new ItemUpdateBuilder(qid1).addStatement(statement).build();
 
         assertEquals("Q1377\tP38\tQ865528\tP38\tQ1377\n", export(update));
+    }
+
+    /**
+     * issue #2320
+     *
+     * A statement with different references should be duplicated,
+     * but each with a different reference.
+     */
+    @Test
+    public void testReferences()
+            throws IOException {
+        Statement baseStatement = TestingData.generateStatement(qid1, qid2);
+        Statement otherStatement = TestingData.generateStatement(qid2, qid1);
+
+        Snak snak1 = baseStatement.getClaim().getMainSnak();
+        Snak snak2 = otherStatement.getClaim().getMainSnak();
+        SnakGroup group1 = Datamodel.makeSnakGroup(Collections.singletonList(snak1));
+        SnakGroup group2 = Datamodel.makeSnakGroup(Collections.singletonList(snak2));
+        Claim claim = Datamodel.makeClaim(qid1, baseStatement.getClaim().getMainSnak(),
+                Collections.singletonList(group2));
+
+        Reference reference1 = Datamodel.makeReference(Collections.singletonList(group1));
+        Reference reference2 = Datamodel.makeReference(Collections.singletonList(group2));
+
+        Statement statement = Datamodel.makeStatement(claim, Arrays.asList(reference1, reference2), StatementRank.NORMAL, "");
+        ItemUpdate update = new ItemUpdateBuilder(qid1).addStatement(statement).build();
+
+        assertEquals("Q1377\tP38\tQ865528\tP38\tQ1377\tS38\tQ865528\n" +
+                "Q1377\tP38\tQ865528\tP38\tQ1377\tS38\tQ1377\n", export(update));
     }
 
     @Test

@@ -247,6 +247,7 @@ DataTableColumnHeaderUI.extendMenu(function(column, columnHeaderUI, menu) {
     var level = DialogSystem.showDialog(frame);
     var dismiss = function() { DialogSystem.dismissUntil(level - 1); };
     elmts.cancelButton.click(dismiss);
+	elmts.text_to_findInput.focus();
     elmts.okButton.click(function() {
       var text_to_find = elmts.text_to_findInput[0].value;
       var replacement_text = elmts.replacement_textInput[0].value;
@@ -304,7 +305,9 @@ DataTableColumnHeaderUI.extendMenu(function(column, columnHeaderUI, menu) {
 
     var level = DialogSystem.showDialog(frame);
     var dismiss = function() { DialogSystem.dismissUntil(level - 1); };
-
+    
+    elmts.separatorInput.focus().select();
+    
     elmts.cancelButton.click(dismiss);
     elmts.okButton.click(function() {
       var mode = $("input[name='split-by-mode']:checked")[0].value;
@@ -677,6 +680,16 @@ DataTableColumnHeaderUI.extendMenu(function(column, columnHeaderUI, menu) {
 
       $('<option>').attr("value", column2.name).text(column2.name).appendTo(elmts.noteColumnSelect);
     }
+
+    var currentHeight = dialog.outerHeight();
+    var currentWidth = dialog.outerWidth();
+    dialog.resizable({
+      alsoResize: ".dialog-border .dialog-body",
+      handles: "e, w, se",
+      minHeight: currentHeight,
+      maxHeight: currentHeight,
+      minWidth: currentWidth
+    });
   };
 
   MenuSystem.appendTo(menu, [ "core/transpose" ], [

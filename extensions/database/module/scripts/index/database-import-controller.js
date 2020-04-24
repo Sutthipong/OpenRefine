@@ -2,28 +2,28 @@
  * Copyright (c) 2017, Tony Opara
  *        All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * - Redistributions of source code must retain the above copyright notice, this 
+ * - Redistributions of source code must retain the above copyright notice, this
  *   list of conditions and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, 
- *   this list of conditions and the following disclaimer in the documentation 
+ * - Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
  *   and/or other materials provided with the distribution.
- * 
- * Neither the name of Google nor the names of its contributors may be used to 
- * endorse or promote products derived from this software without specific 
+ *
+ * Neither the name of Google nor the names of its contributors may be used to
+ * endorse or promote products derived from this software without specific
  * prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
@@ -48,7 +48,7 @@ $.i18n().load(dictionary, lang);
 
 Refine.DatabaseImportController = function(createProjectUI) {
   this._createProjectUI = createProjectUI;
-  
+
   this._parsingPanel = createProjectUI.addCustomPanel();
 
   createProjectUI.addSourceSelectionUI({
@@ -64,34 +64,37 @@ Refine.DatabaseImportController.prototype.startImportingDocument = function(quer
     var dismiss = DialogSystem.showBusy($.i18n('database-import/preparing'));
     //alert(queryInfo.query);
     var self = this;
-  
-    $.post(
+
+    Refine.postCSRF(
       "command/core/create-importing-job",
       null,
       function(data) {
-        $.post(
-          "command/core/importing-controller?" + $.param({
-            "controller": "database/database-import-controller",
-            "subCommand": "initialize-parser-ui"
-          }),
-          queryInfo,
-          
-          function(data2) {
-            dismiss();
-            
-            if (data2.status == 'ok') {
-              self._queryInfo = queryInfo;
-              self._jobID = data.jobID;
-              self._options = data2.options;
-              
-              self._showParsingPanel();
-              
-            } else {
-              alert(data2.message);
-            }
-          },
-          "json"
-        );
+        Refine.wrapCSRF(function(token) {
+            $.post(
+            "command/core/importing-controller?" + $.param({
+                "controller": "database/database-import-controller",
+                "subCommand": "initialize-parser-ui",
+                "csrf_token": token
+            }),
+            queryInfo,
+
+            function(data2) {
+                dismiss();
+
+                if (data2.status == 'ok') {
+                self._queryInfo = queryInfo;
+                self._jobID = data.jobID;
+                self._options = data2.options;
+
+                self._showParsingPanel();
+
+                } else {
+                alert(data2.message);
+                }
+            },
+            "json"
+            );
+        });
       },
       "json"
     );
@@ -99,9 +102,9 @@ Refine.DatabaseImportController.prototype.startImportingDocument = function(quer
 
 Refine.DatabaseImportController.prototype.getOptions = function() {
    var options = {
-  
+
    };
-  
+
     var parseIntDefault = function(s, def) {
       try {
         var n = parseInt(s);
@@ -114,7 +117,7 @@ Refine.DatabaseImportController.prototype.getOptions = function() {
       return def;
     };
 
-    
+
     if (this._parsingPanelElmts.skipCheckbox[0].checked) {
       options.skipDataLines = parseIntDefault(this._parsingPanelElmts.skipInput[0].value, 0);
     } else {
@@ -133,10 +136,10 @@ Refine.DatabaseImportController.prototype.getOptions = function() {
 
 Refine.DatabaseImportController.prototype._showParsingPanel = function() {
     var self = this;
-    
+
     this._parsingPanel.unbind().empty().html(
         DOM.loadHTML("database",'scripts/index/database-parsing-panel.html'));
-        
+
     this._parsingPanelElmts = DOM.bind(this._parsingPanel);
 
     this._parsingPanelElmts.startOverButton.html($.i18n('database-parsing/start-over'));
@@ -152,11 +155,11 @@ Refine.DatabaseImportController.prototype._showParsingPanel = function() {
     this._parsingPanelElmts.database_limit.html($.i18n('database-parsing/limit'));
     this._parsingPanelElmts.database_store_row.html($.i18n('database-parsing/store-row'));
     this._parsingPanelElmts.database_store_cell.html($.i18n('database-parsing/store-cell'));
-    
+
     if (this._parsingPanelResizer) {
       $(window).unbind('resize', this._parsingPanelResizer);
     }
-    
+
     this._parsingPanelResizer = function() {
       var elmts = self._parsingPanelElmts;
       var width = self._parsingPanel.width();
@@ -181,27 +184,27 @@ Refine.DatabaseImportController.prototype._showParsingPanel = function() {
       .css("width", (width - DOM.getHPaddings(elmts.controlPanel)) + "px")
       .css("height", (controlPanelHeight - DOM.getVPaddings(elmts.controlPanel)) + "px");
     };
-    
+
     $(window).resize(this._parsingPanelResizer);
     this._parsingPanelResizer();
-    
+
     this._parsingPanelElmts.startOverButton.click(function() {
       // explicitly cancel the import job
       Refine.CreateProjectUI.cancelImportingJob(self._jobID);
-  
+
       delete self._jobID;
       delete self._options;
-      
+
       self._createProjectUI.showSourceSelectionPanel();
     });
-    
+
     this._parsingPanelElmts.createProjectButton.click(function() { self._createProject(); });
     this._parsingPanelElmts.previewButton.click(function() { self._updatePreview(); });
     //alert("datetime::" + $.now());
     //this._parsingPanelElmts.projectNameInput[0].value = this._queryInfo.connectionName + "_" + this._queryInfo.databaseUser + "_" + $.now();
     this._parsingPanelElmts.projectNameInput[0].value = this._queryInfo.databaseServer +  "_" + this._queryInfo.initialDatabase + "_" + $.now();
 
-    
+
     if (this._options.limit > 0) {
       this._parsingPanelElmts.limitCheckbox.prop("checked", true);
       this._parsingPanelElmts.limitInput[0].value = this._options.limit.toString();
@@ -222,7 +225,7 @@ Refine.DatabaseImportController.prototype._showParsingPanel = function() {
     };
     this._parsingPanel.find("input").bind("change", onChange);
     this._parsingPanel.find("select").bind("change", onChange);
-    
+
     this._createProjectUI.showCustomPanel(this._parsingPanel);
     this._updatePreview();
 };
@@ -248,40 +251,43 @@ Refine.DatabaseImportController.prototype._updatePreview = function() {
     this._queryInfo.options = JSON.stringify(this.getOptions());
     //alert("options:" + this._queryInfo.options);
 
-    $.post(
-      "command/core/importing-controller?" + $.param({
-        "controller": "database/database-import-controller",
-        "jobID": this._jobID,
-        "subCommand": "parse-preview"
-      }),
-      
-      this._queryInfo,
-      
-      function(result) {
-        if (result.status == "ok") {
-            self._getPreviewData(function(projectData) {
-            self._parsingPanelElmts.progressPanel.hide();
-            self._parsingPanelElmts.dataPanel.show();
+    Refine.wrapCSRF(function(token) {
+        $.post(
+        "command/core/importing-controller?" + $.param({
+            "controller": "database/database-import-controller",
+            "jobID": self._jobID,
+            "subCommand": "parse-preview",
+            "csrf_token": token
+        }),
 
-            new Refine.PreviewTable(projectData, self._parsingPanelElmts.dataPanel.unbind().empty());
-          });
-        } else {
-          
-           alert('Errors:\n' +  (result.message) ? result.message : Refine.CreateProjectUI.composeErrorMessage(job));
-           self._parsingPanelElmts.progressPanel.hide();
-           
-           Refine.CreateProjectUI.cancelImportingJob(self._jobID);
-           
-           delete self._jobID;
-           delete self._options;
-           
-           self._createProjectUI.showSourceSelectionPanel();
-           
-         
-        }
-      },
-      "json"
-    );
+        self._queryInfo,
+
+        function(result) {
+            if (result.status == "ok") {
+                self._getPreviewData(function(projectData) {
+                self._parsingPanelElmts.progressPanel.hide();
+                self._parsingPanelElmts.dataPanel.show();
+
+                new Refine.PreviewTable(projectData, self._parsingPanelElmts.dataPanel.unbind().empty());
+            });
+            } else {
+
+            alert('Errors:\n' +  (result.message) ? result.message : Refine.CreateProjectUI.composeErrorMessage(job));
+            self._parsingPanelElmts.progressPanel.hide();
+
+            Refine.CreateProjectUI.cancelImportingJob(self._jobID);
+
+            delete self._jobID;
+            delete self._options;
+
+            self._createProjectUI.showSourceSelectionPanel();
+
+
+            }
+        },
+        "json"
+        );
+    });
   };
 
 Refine.DatabaseImportController.prototype._getPreviewData = function(callback, numRows) {
@@ -297,7 +303,7 @@ Refine.DatabaseImportController.prototype._getPreviewData = function(callback, n
             result[n] = data[n];
           }
         }
-        
+
         $.post(
           "command/core/get-rows?" + $.param({
             "importingJobID" : self._jobID,
@@ -323,57 +329,60 @@ Refine.DatabaseImportController.prototype._createProject = function() {
       this._parsingPanelElmts.projectNameInput.focus();
       return;
     }
-    
+
     var self = this;
     var options = this.getOptions();
     options.projectName = projectName;
-    
+
     this._queryInfo.options = JSON.stringify(options);
-    $.post(
-      "command/core/importing-controller?" + $.param({
-        "controller": "database/database-import-controller",
-        "jobID": this._jobID,
-        "subCommand": "create-project"
-      }),
-      this._queryInfo,
-      function(o) {
-        if (o.status == 'error') {
-          alert(o.message);
-        } else {
-          var start = new Date();
-          var timerID = window.setInterval(
-            function() {
-              self._createProjectUI.pollImportJob(
-                  start,
-                  self._jobID,
-                  timerID,
-                  function(job) {
-                    return "projectID" in job.config;
-                  },
-                  function(jobID, job) {
-                      //alert("jobID::" + jobID + " job :" + job);
-                    window.clearInterval(timerID);
-                    Refine.CreateProjectUI.cancelImportingJob(jobID);
-                    document.location = "project?project=" + job.config.projectID;
-                  },
-                  function(job) {
-                    alert(Refine.CreateProjectUI.composeErrorMessage(job));
-                  }
-              );
-            },
-            1000
-          );
-          self._createProjectUI.showImportProgressPanel($.i18n('database-import/creating'), function() {
-            // stop the timed polling
-            window.clearInterval(timerID);
+    Refine.wrapCSRF(function(token) {
+        $.post(
+        "command/core/importing-controller?" + $.param({
+            "controller": "database/database-import-controller",
+            "jobID": self._jobID,
+            "subCommand": "create-project",
+            "csrf_token": token
+        }),
+        self._queryInfo,
+        function(o) {
+            if (o.status == 'error') {
+            alert(o.message);
+            } else {
+            var start = new Date();
+            var timerID = window.setInterval(
+                function() {
+                self._createProjectUI.pollImportJob(
+                    start,
+                    self._jobID,
+                    timerID,
+                    function(job) {
+                        return "projectID" in job.config;
+                    },
+                    function(jobID, job) {
+                        //alert("jobID::" + jobID + " job :" + job);
+                        window.clearInterval(timerID);
+                        Refine.CreateProjectUI.cancelImportingJob(jobID);
+                        document.location = "project?project=" + job.config.projectID;
+                    },
+                    function(job) {
+                        alert(Refine.CreateProjectUI.composeErrorMessage(job));
+                    }
+                );
+                },
+                1000
+            );
+            self._createProjectUI.showImportProgressPanel($.i18n('database-import/creating'), function() {
+                // stop the timed polling
+                window.clearInterval(timerID);
 
-            // explicitly cancel the import job
-            Refine.CreateProjectUI.cancelImportingJob(jobID);
+                // explicitly cancel the import job
+                Refine.CreateProjectUI.cancelImportingJob(jobID);
 
-            self._createProjectUI.showSourceSelectionPanel();
-          });
-        }
-      },
-      "json"
-    );
+                self._createProjectUI.showSourceSelectionPanel();
+            });
+            }
+        },
+        "json"
+        );
+    });
 };

@@ -1,3 +1,4 @@
+.idea/
 *.log
 logs
 *~
@@ -27,6 +28,10 @@ test-out/
 /bin
 open-refine.log
 .vscode
+.metadata # Eclipse plugins specific
+
+.idea
+*.iml
 
 main/target/
 main/webapp/WEB-INF/lib/
@@ -43,3 +48,10 @@ target/
 *.classpath
 *.project
 *.settings
+
+# Ignore Apache Maven default download path
+apache-maven-*/
+apache-maven-*-bin.tar.gz
+
+# Ignore refine-dev.ini
+refine-dev.ini
