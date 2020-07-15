@@ -235,7 +235,7 @@ function registerImporting() {
   /*
    *  Extension to format mappings
    */
-  IM.registerExtension(".txt", "text/line-based");
+  IM.registerExtension(".txt", "text");
   IM.registerExtension(".csv", "text/line-based/*sv");
   IM.registerExtension(".tsv", "text/line-based/*sv");
 
@@ -266,7 +266,7 @@ function registerImporting() {
   /*
    *  Mime type to format mappings
    */
-  IM.registerMimeType("text/plain", "text/line-based");
+  IM.registerMimeType("text/plain", "text");
   IM.registerMimeType("text/csv", "text/line-based/*sv");
   IM.registerMimeType("text/x-csv", "text/line-based/*sv");
   IM.registerMimeType("text/tab-separated-value", "text/line-based/*sv");
@@ -280,6 +280,7 @@ function registerImporting() {
   IM.registerMimeType("text/turtle", "text/rdf/ttl");
   IM.registerMimeType("application/xml", "text/xml");
   IM.registerMimeType("text/xml", "text/xml");
+  IM.registerMimeType("+xml", "text/xml"); // suffix will be tried only as fallback
   IM.registerMimeType("application/rdf+xml", "text/rdf/xml");
   IM.registerMimeType("application/ld+json", "text/rdf/ld+json");
   IM.registerMimeType("application/atom+xml", "text/xml");
@@ -299,6 +300,7 @@ function registerImporting() {
   IM.registerMimeType("application/json", "text/json");
   IM.registerMimeType("application/javascript", "text/json");
   IM.registerMimeType("text/json", "text/json");
+  IM.registerMimeType("+json", "text/json"); // suffix will be tried only as fallback
 
   IM.registerMimeType("application/marc", "text/marc");
   
@@ -345,16 +347,22 @@ function init() {
       "externals/jquery.cookie.js",
       "externals/jquery-ui/jquery-ui-1.10.3.custom.js",
       "externals/date.js",
+
+      "externals/CLDRPluralRuleParser.js",
       "externals/jquery.i18n.js",
+      "externals/jquery.i18n.messagestore.js",
+      "externals/jquery.i18n.fallbacks.js",
+      "externals/jquery.i18n.parser.js",
+      "externals/jquery.i18n.emitter.js",
+      "externals/jquery.i18n.language.js",
+      "externals/languages/fi.js",
+      "externals/languages/ru.js",
+
       "externals/tablesorter/jquery.tablesorter.min.js",
       "externals/moment-with-locales.min.js",
       "externals/select2/select2.min.js",
       "externals/jquery.lavalamp.min.js",
-      "externals/jquery.i18n.messagestore.js",
-      "externals/jquery.i18n.emitter.js",
-      "externals/jquery.i18n.parser.js",
-      "externals/jquery.i18n.emitter.js",
-      "externals/jquery.i18n.language.js",
+
 
       "scripts/util/misc.js",
       "scripts/util/url.js",
@@ -436,6 +444,8 @@ function init() {
       "externals/jquery-ui/jquery-ui-1.10.3.custom.js",
       "externals/imgareaselect/jquery.imgareaselect.js",
       "externals/date.js",
+
+      "externals/CLDRPluralRuleParser.js",
       "externals/jquery.i18n.js",
       "externals/jquery.i18n.messagestore.js",
       "externals/jquery.i18n.parser.js",
@@ -550,11 +560,17 @@ function init() {
       "externals/jquery-ui/jquery-ui-1.10.3.custom.js",
       "externals/imgareaselect/jquery.imgareaselect.js",
       "externals/date.js",
+
+      "externals/CLDRPluralRuleParser.js",
       "externals/jquery.i18n.js",
       "externals/jquery.i18n.messagestore.js",
+      "externals/jquery.i18n.fallbacks.js",
       "externals/jquery.i18n.parser.js",
       "externals/jquery.i18n.emitter.js",
       "externals/jquery.i18n.language.js",
+      "externals/languages/fi.js",
+      "externals/languages/ru.js",
+
       "externals/underscore-min.js",
       "scripts/preferences.js",
     ]

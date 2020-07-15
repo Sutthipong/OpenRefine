@@ -39,6 +39,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -126,6 +127,7 @@ public class OdsImporter extends TabularImportingParserBase {
             ProjectMetadata metadata,
             ImportingJob job,
             String fileSource,
+            String archiveFileName,
             InputStream inputStream,
             int limit,
             ObjectNode options,
@@ -166,6 +168,7 @@ public class OdsImporter extends TabularImportingParserBase {
 
                     List<Object> cells = new ArrayList<Object>();
                     OdfTableRow row = table.getRowByIndex(nextRow++);
+                    int maxCol = 0;
                     if (row != null) {
                         int lastCell = row.getCellCount();
                         for (int cellIndex = 0; cellIndex <= lastCell; cellIndex++) {
@@ -176,9 +179,13 @@ public class OdsImporter extends TabularImportingParserBase {
                                 cell = extractCell(sourceCell, reconMap);
                             }
                             cells.add(cell);
+                            if (cell != null && cellIndex > maxCol) {
+                                maxCol = cellIndex;
+                            }
                         }
                     }
-                    return cells;
+                    // Right truncate null cells
+                    return cells.subList(0, maxCol + 1);
                 }
             };
 
@@ -188,13 +195,14 @@ public class OdsImporter extends TabularImportingParserBase {
                     job,
                     dataReader,
                     fileSource + "#" + table.getTableName(),
+                    archiveFileName,
                     limit,
                     options,
                     exceptions
             );
         }
         
-        super.parseOneFile(project, metadata, job, fileSource, inputStream, limit, options, exceptions);
+        super.parseOneFile(project, metadata, job, fileSource, archiveFileName, inputStream, limit, options, exceptions);
     }
 
     static protected Serializable extractCell(OdfTableCell cell) {
@@ -209,7 +217,7 @@ public class OdsImporter extends TabularImportingParserBase {
         } else if ("float".equals(cellType)) {
             value = cell.getDoubleValue();
         } else if ("date".equals(cellType)) {
-            value = cell.getDateValue();
+            value = ParsingUtilities.toDate(cell.getDateValue());
         } else if ("currency".equals(cellType)) {
             value = cell.getCurrencyValue();
         } else if ("percentage".equals(cellType)) {
@@ -221,10 +229,10 @@ public class OdsImporter extends TabularImportingParserBase {
             if ("".equals(value)) {
                 value = null;
             } else {
-                logger.info("Null cell type with non-empty value: " + value);                
+                logger.warn("Null cell type with non-empty value: " + value);
             }
         } else {
-            logger.info("Unexpected cell type " + cellType);
+            logger.warn("Unexpected cell type " + cellType);
             value = cell.getDisplayText();
         }
         return value;
@@ -281,5 +289,4 @@ public class OdsImporter extends TabularImportingParserBase {
             return null;
         }
     }
-
-} 
+}

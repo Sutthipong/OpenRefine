@@ -116,8 +116,9 @@ DataTableColumnHeaderUI.extendMenu(function(column, columnHeaderUI, menu) {
     );
   };
 
-  var doJoinMultiValueCells = function() {
-    var separator = window.prompt($.i18n('core-views/enter-separator'), ", ");
+  var doJoinMultiValueCells = function(separator) {
+    var defaultValue = Refine.getPreference("ui.cell.rowSplitDefaultSeparator", ",");
+    var separator = window.prompt($.i18n('core-views/enter-separator'), defaultValue);
     if (separator !== null) {
       Refine.postCoreProcess(
         "join-multi-value-cells",
@@ -129,6 +130,7 @@ DataTableColumnHeaderUI.extendMenu(function(column, columnHeaderUI, menu) {
         null,
         { rowsChanged: true }
       );
+      Refine.setPreference("ui.cell.rowSplitDefaultSeparator", separator);
     }
   };
 
@@ -247,7 +249,7 @@ DataTableColumnHeaderUI.extendMenu(function(column, columnHeaderUI, menu) {
     var level = DialogSystem.showDialog(frame);
     var dismiss = function() { DialogSystem.dismissUntil(level - 1); };
     elmts.cancelButton.click(dismiss);
-	elmts.text_to_findInput.focus();
+    elmts.text_to_findInput.focus();
     elmts.okButton.click(function() {
       var text_to_find = elmts.text_to_findInput[0].value;
       var replacement_text = elmts.replacement_textInput[0].value;
@@ -300,12 +302,23 @@ DataTableColumnHeaderUI.extendMenu(function(column, columnHeaderUI, menu) {
     elmts.or_views_fieldLen.text($.i18n('core-views/field-len'));
     elmts.or_views_listInt.text($.i18n('core-views/list-int'));
 
+    elmts.or_views_byCase.text($.i18n('core-views/by-case'));
+    elmts.or_views_byNumber.text($.i18n('core-views/by-number'));
+    elmts.or_views_revCase.text($.i18n('core-views/by-rev'));
+    elmts.or_views_revNum.text($.i18n('core-views/by-rev'));
+    elmts.or_views_caseExample.text($.i18n('core-views/by-case-example'));
+    elmts.or_views_caseReverseExample.text($.i18n('core-views/by-case-rev-example'));
+    elmts.or_views_numberExample.text($.i18n('core-views/by-number-example'));
+    elmts.or_views_numberReverseExample.text($.i18n('core-views/by-number-rev-example'));
+
     elmts.okButton.html($.i18n('core-buttons/ok'));
     elmts.cancelButton.text($.i18n('core-buttons/cancel'));
 
     var level = DialogSystem.showDialog(frame);
     var dismiss = function() { DialogSystem.dismissUntil(level - 1); };
     
+    var defaultValue = Refine.getPreference("ui.cell.rowSplitDefaultSeparator", ",");
+    elmts.separatorInput[0].value = defaultValue;
     elmts.separatorInput.focus().select();
     
     elmts.cancelButton.click(dismiss);
@@ -324,8 +337,8 @@ DataTableColumnHeaderUI.extendMenu(function(column, columnHeaderUI, menu) {
         }
 
         config.regex = elmts.regexInput[0].checked;
-
-      } else {
+        Refine.setPreference("ui.cell.rowSplitDefaultSeparator", config.separator);
+      } else if (mode === "lengths") {
         var s = "[" + elmts.lengthsTextarea[0].value + "]";
         try {
           var a = JSON.parse(s);
@@ -348,6 +361,20 @@ DataTableColumnHeaderUI.extendMenu(function(column, columnHeaderUI, menu) {
           alert($.i18n('core-views/warning-format'));
           return;
         }
+      } else if (mode === "cases") {
+        if(elmts.reversTranistionCases[0].checked) {
+          config.separator = "(?<=\\p{Upper}|[\\p{Upper}][\\s])(?=\\p{Lower})";
+        } else {
+          config.separator = "(?<=\\p{Lower}|[\\p{Lower}][\\s])(?=\\p{Upper})";
+        }
+        config.regex = true;
+      } else if (mode === "number") {
+        if(elmts.reversTranistionNumbers[0].checked) {
+          config.separator = "(?<=\\p{L}|[\\p{L}][\\s])(?=\\p{Digit})";
+        } else {
+          config.separator = "(?<=\\p{Digit}|[\\p{Digit}][\\s])(?=\\p{L})";
+        }
+        config.regex = true;
       }
 
       Refine.postCoreProcess(

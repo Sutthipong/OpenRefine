@@ -95,7 +95,8 @@ public class RefineTest extends PowerMockTestCase {
             FileUtils.writeStringToFile(jsonPath, "{\"projectIDs\":[]\n" + 
                     ",\"preferences\":{\"entries\":{\"scripting.starred-expressions\":" +
                     "{\"class\":\"com.google.refine.preference.TopList\",\"top\":2147483647," +
-                    "\"list\":[]},\"scripting.expressions\":{\"class\":\"com.google.refine.preference.TopList\",\"top\":100,\"list\":[]}}}}");
+                    "\"list\":[]},\"scripting.expressions\":{\"class\":\"com.google.refine.preference.TopList\",\"top\":100,\"list\":[]}}}}",
+                    "UTF-8"); // JSON is always UTF-8
             FileProjectManager.initialize(workspaceDir);
             
 
@@ -175,7 +176,7 @@ public class RefineTest extends PowerMockTestCase {
         SeparatorBasedImporter importer = new SeparatorBasedImporter();
         
         List<Exception> exceptions = new ArrayList<Exception>();
-        importer.parseOneFile(project, metadata, job, "filesource", new StringReader(input), -1, options, exceptions);
+        importer.parseOneFile(project, metadata, job, "filesource", "archivefile", new StringReader(input), -1, options, exceptions);
         project.update();
         ProjectManager.singleton.registerProject(project, metadata);
         

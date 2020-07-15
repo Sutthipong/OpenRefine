@@ -34,7 +34,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package com.google.refine.importers;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -129,6 +128,7 @@ public class ExcelImporter extends TabularImportingParserBase {
         ProjectMetadata metadata,
         ImportingJob job,
         String fileSource,
+        String archiveFileName,
         InputStream inputStream,
         int limit,
         ObjectNode options,
@@ -221,14 +221,14 @@ public class ExcelImporter extends TabularImportingParserBase {
                 metadata,
                 job,
                 dataReader,
-                fileSource + "#" + sheet.getSheetName(),
+                fileSource + "#" + sheet.getSheetName(), archiveFileName,
                 limit,
                 options,
                 exceptions
             );
         }
 
-        super.parseOneFile(project, metadata, job, fileSource, inputStream, limit, options, exceptions);
+        super.parseOneFile(project, metadata, job, fileSource, archiveFileName, inputStream, limit, options, exceptions);
     }
     
     static protected Cell extractCell(org.apache.poi.ss.usermodel.Cell cell) {
@@ -248,7 +248,7 @@ public class ExcelImporter extends TabularImportingParserBase {
             double d = cell.getNumericCellValue();
             
             if (DateUtil.isCellDateFormatted(cell)) {
-                value = DateUtil.getJavaDate(d);
+                value = ParsingUtilities.toDate(DateUtil.getJavaDate(d));
                 // TODO: If we had a time datatype, we could use something like the following
                 // to distinguish times from dates (although Excel doesn't really make the distinction)
                 // Another alternative would be to look for values < 0.60
