@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.openrefine.wikidata.qa.scrutinizers.QuantityScrutinizer.ALLOWED_UNITS_CONSTRAINT_PID;
@@ -207,12 +205,11 @@ public class QuantityScrutinizerTest extends ValueScrutinizerTest{
 
         Snak qualifierSnak = Datamodel.makeValueSnak(itemParameterPID, allowedUnit);
         List<Snak> qualifierSnakList = Collections.singletonList(qualifierSnak);
-        SnakGroup snakGroup1 = Datamodel.makeSnakGroup(qualifierSnakList);
-        List<SnakGroup> constraintQualifiers = Collections.singletonList(snakGroup1);
+        SnakGroup qualifierSnakGroup = Datamodel.makeSnakGroup(qualifierSnakList);
+        List<SnakGroup> constraintQualifiers = Collections.singletonList(qualifierSnakGroup);
         List<Statement> constraintDefinitions = constraintParameterStatementList(allowedUnitEntity, constraintQualifiers);
         ConstraintFetcher fetcher = mock(ConstraintFetcher.class);
         when(fetcher.getConstraintsByType(propertyIdValue, ALLOWED_UNITS_CONSTRAINT_QID)).thenReturn(constraintDefinitions);
-        when(fetcher.findValues(constraintQualifiers, ALLOWED_UNITS_CONSTRAINT_PID)).thenReturn(Collections.singletonList(allowedUnit));
         setFetcher(fetcher);
 
         scrutinize(update);
@@ -229,7 +226,6 @@ public class QuantityScrutinizerTest extends ValueScrutinizerTest{
         List<Statement> constraintDefinitions = constraintParameterStatementList(allowedUnitEntity, new ArrayList<>());
         ConstraintFetcher fetcher = mock(ConstraintFetcher.class);
         when(fetcher.getConstraintsByType(propertyIdValue, ALLOWED_UNITS_CONSTRAINT_QID)).thenReturn(constraintDefinitions);
-        when(fetcher.findValues(any(), eq(ALLOWED_UNITS_CONSTRAINT_PID))).thenReturn(new ArrayList<>());
         setFetcher(fetcher);
 
         scrutinize(update);
@@ -245,7 +241,6 @@ public class QuantityScrutinizerTest extends ValueScrutinizerTest{
 
         ConstraintFetcher fetcher = mock(ConstraintFetcher.class);
         when(fetcher.getConstraintsByType(propertyIdValue, ALLOWED_UNITS_CONSTRAINT_QID)).thenReturn(new ArrayList<>());
-        when(fetcher.findValues(any(), eq(ALLOWED_UNITS_CONSTRAINT_PID))).thenReturn(new ArrayList<>());
         setFetcher(fetcher);
 
         scrutinize(update);

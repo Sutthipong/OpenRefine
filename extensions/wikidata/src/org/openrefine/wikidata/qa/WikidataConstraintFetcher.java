@@ -27,12 +27,9 @@ import org.openrefine.wikidata.utils.EntityCache;
 import org.wikidata.wdtk.datamodel.interfaces.EntityIdValue;
 import org.wikidata.wdtk.datamodel.interfaces.PropertyDocument;
 import org.wikidata.wdtk.datamodel.interfaces.PropertyIdValue;
-import org.wikidata.wdtk.datamodel.interfaces.Snak;
-import org.wikidata.wdtk.datamodel.interfaces.SnakGroup;
 import org.wikidata.wdtk.datamodel.interfaces.Statement;
 import org.wikidata.wdtk.datamodel.interfaces.StatementGroup;
 import org.wikidata.wdtk.datamodel.interfaces.StatementRank;
-import org.wikidata.wdtk.datamodel.interfaces.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,36 +47,10 @@ public class WikidataConstraintFetcher implements ConstraintFetcher {
 
     public static String WIKIDATA_CONSTRAINT_PID = "P2302";
 
-    // The following constraints still need to be implemented:
-
-    public static String TYPE_CONSTRAINT_QID = "Q21503250";
-
     protected EntityCache entityCache;
     
     public WikidataConstraintFetcher(EntityCache cache) {
         entityCache = cache;
-    }
-
-    /**
-     * Returns a single constraint for a particular type and a property, or null if
-     * there is no such constraint
-     * 
-     * @param pid
-     *            the property to retrieve the constraints for
-     * @param qid
-     *            the type of the constraints
-     * @return the list of qualifiers for the constraint, or null if it does not
-     *         exist
-     */
-    protected List<SnakGroup> getSingleConstraint(PropertyIdValue pid, String qid) {
-        List<Statement> statementList = getConstraintsByType(pid, qid);
-        if (!statementList.isEmpty()) {
-            Statement statement = statementList.get(0);
-            if (statement != null) {
-                return statement.getClaim().getQualifiers();
-            }
-        }
-        return null;
     }
 
     /**
@@ -116,27 +87,6 @@ public class WikidataConstraintFetcher implements ConstraintFetcher {
         } else {
             return new ArrayList<Statement>();
         }
-    }
-
-    /**
-     * Returns the values of a given property in qualifiers
-     * 
-     * @param groups
-     *            the qualifiers
-     * @param pid
-     *            the property to filter on
-     * @return
-     */
-    @Override
-    public List<Value> findValues(List<SnakGroup> groups, String pid) {
-        List<Value> results = new ArrayList<>();
-        for (SnakGroup group : groups) {
-            if (group.getProperty().getId().equals(pid)) {
-                for (Snak snak : group.getSnaks())
-                    results.add(snak.getValue());
-            }
-        }
-        return results;
     }
 
 }
