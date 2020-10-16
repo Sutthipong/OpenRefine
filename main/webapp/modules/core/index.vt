@@ -35,7 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>OpenRefine</title>
+  <title>CUBIKA&trade; Refine</title>
   <link rel="icon" type="image/png" href="images/favicon.png">
   <script type="text/javascript" src="wirings.js"></script>
   $scriptInjection
@@ -44,7 +44,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </head>
 <body>
   <div id="header">
-    <img alt="OpenRefine" src="images/logo-openrefine-550.png" height="29" />
+    <img alt="CUBIKA&trade; Refine" src="images/logo-cubika-refine-full-320px.png" height="29" />
     <span id="slogan"></span>
   </div>
   
