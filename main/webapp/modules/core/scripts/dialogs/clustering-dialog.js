@@ -51,8 +51,10 @@ ClusteringDialog.prototype._createDialog = function() {
     this._elmts = DOM.bind(dialog);
     this._elmts.dialogHeader.text($.i18n('core-dialogs/cluster-edit')+' "' + this._columnName + '"');
 
-    this._elmts.or_dialog_descr.html($.i18n('core-dialogs/cluster-descr'));
-    this._elmts.or_dialog_findMore.html($.i18n('core-dialogs/find-more'));
+    //this._elmts.or_dialog_descr.html($.i18n('core-dialogs/cluster-descr'));
+    //this._elmts.or_dialog_findMore.html($.i18n('core-dialogs/find-more'));
+    this._elmts.or_dialog_descr.html('');
+    this._elmts.or_dialog_findMore.html('');
     this._elmts.or_dialog_method.html($.i18n('core-dialogs/method'));
     this._elmts.or_dialog_keyCollision.html($.i18n('core-dialogs/key-collision'));
     this._elmts.or_dialog_neighbor.html($.i18n('core-dialogs/nearest-neighbor'));

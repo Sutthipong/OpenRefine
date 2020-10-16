@@ -35,7 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>OpenRefine</title>
+  <title>CUBIKA&trade; Data-Refiner</title>
   <link rel="icon" type="image/png" href="images/favicon.png">
   <script type="text/javascript" src="wirings.js"></script>
   $scriptInjection
@@ -44,28 +44,33 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </head>
 <body>
   <div id="header">
-    <img alt="OpenRefine" src="images/logo-openrefine-550.png" height="29" />
-    <span id="slogan"></span>
+    <img alt="CUBIKA&trade; Data-Refiner" src="images/logo-openrefine-550.png" height="29" />
+    <span>NLP Infused Data Preparation</span>
   </div>
   
-  <div id="left-panel" class="main-layout-panel"><div id="left-panel-body">
+  <div id="left-panel" class="main-layout-panel" style="right: 0px;"><div id="left-panel-body">
     <ul id="action-area-tabs">
     </ul>
     
     <div id="project-links">
       <div id="logo-container">
-        <img alt="OpenRefine" src="images/logo-gem-126.png" height="65" />
+        <!--
+        <img alt="CUBIKA&trade; Data-Refiner" src="images/logo-gem-126.png" height="65" />
+        
         <div id="openrefine-version"></div>
+        -->
       </div>
+      <!--
       <ul>
         <li><a href="preferences" id="or-index-pref"></a></li>
         <li><a href="https://github.com/OpenRefine/OpenRefine/wiki/Documentation-For-Users" id="or-index-help"></a></li>
         <li><a href="about.html" id="or-index-about"></a></li>
       </ul>
+      -->
     </div>
   </div></div> <!-- left-panel -->
 
-  <div id="right-panel" class="main-layout-panel"><div id="right-panel-body">
+  <div id="right-panel" class="main-layout-panel" style="left: 0px;"><div id="right-panel-body">
   </div></div> <!-- right-panel -->
   
   <div id="no-project-message" class="message" style="display: none;">
