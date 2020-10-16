@@ -95,11 +95,11 @@ BrowsingEngine.prototype._initializeUI = function() {
   var self = this;
 
   this._div.html(
-    '<div class="browsing-panel-help" bind="help">' +
-    '<h1>'+$.i18n('core-project/use-facets')+'</h1>' +
-    '<p>'+$.i18n('core-project/use-to-select')+'</p>' +
-    '<p>'+$.i18n('core-project/not-sure')+'<br /><a href="https://github.com/OpenRefine/OpenRefine/wiki/Screencasts" target="_blank"><b>'+$.i18n('core-project/watch-cast')+'</b></a></p>' +
-    '</div>' +
+    //'<div class="browsing-panel-help" bind="help">' +
+    //'<h1>'+$.i18n('core-project/use-facets')+'</h1>' +
+    //'<p>'+$.i18n('core-project/use-to-select')+'</p>' +
+    //'<p>'+$.i18n('core-project/not-sure')+'<br /><a href="https://github.com/OpenRefine/OpenRefine/wiki/Screencasts" target="_blank"><b>'+$.i18n('core-project/watch-cast')+'</b></a></p>' +
+    //'</div>' +
     '<div class="browsing-panel-header" bind="header">' +
     '<div class="browsing-panel-errors" bind="errors"></div>' +
     '<div class="browsing-panel-indicator" bind="indicator">' +
@@ -237,7 +237,7 @@ BrowsingEngine.prototype.removeFacet = function(facet) {
 BrowsingEngine.prototype.update = function(onDone) {
   var self = this;
 
-  this._elmts.help.hide();
+  //this._elmts.help.hide();
 
   this._elmts.header.show();
   this._elmts.controls.css("visibility", "hidden");
@@ -272,7 +272,7 @@ BrowsingEngine.prototype.update = function(onDone) {
 
         self.resize();
       } else {
-        self._elmts.help.show();
+        //self._elmts.help.show();
       }
 
       if (onDone) {
