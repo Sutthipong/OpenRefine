@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CUBIKA&trade; Data-Refiner</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
     $styleInjection
@@ -42,9 +43,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <script type="text/javascript" src="wirings.js"></script>
     $scriptInjection
     <script>Refine.encodings = $encodingJson; Refine.defaultEncoding = $defaultEncoding;</script>
+
+    <!-- Load MUICSS -->
+    <link href="//cdn.muicss.com/mui-0.10.3/css/mui.min.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.muicss.com/mui-0.10.3/js/mui.min.js"></script>
+
   </head>
-  <body>
-    <div id="header" style="">
+  <body style="font-size: 11px;">
+    <div id="header">
       <a id="app-home-button" href="./"><img alt="CUBIKA&trade; Data-Refiner" src="images/logo-openrefine-550.png" height="29" /></a>
       <div id="project-title">
         <span id="project-name-button" class="app-path-section"></span>
@@ -74,15 +80,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           <div id="refine-tabs-history" bind="historyPanelDiv" id="history-panel"></div>
         </div>
       </div>
-      <div bind="rightPanelDiv" id="right-panel" style="left: 0px; background-color: whitesmoke;">
-        <div bind="toolPanelDiv" id="tool-panel">
-          <div bind="summaryBarDiv" id="summary-bar">
+      <div bind="rightPanelDiv" id="right-panel" style="left: 300px; background-color: whitesmoke; top: 40px; height: 939px; width: 921px;">
+        <div bind="toolPanelDiv" id="tool-panel" style="height: 36px;">
+          <font style="font-size: 1.8em; font-weight: normal;">&nbsp;&nbsp;Data&nbsp;</font>
+          <div bind="summaryBarDiv" id="summary-bar" style="padding-left: 0px;">
             <!-- row/record counts -->
           </div>
           <div bind="extensionBarDiv" id="extension-bar">
             
+            <!--
             <span id="or-proj-ext"></span> 
-            
+            -->
             <span bind="menuContainer" id="extension-bar-menu-container"></span>
           </div>
         </div>

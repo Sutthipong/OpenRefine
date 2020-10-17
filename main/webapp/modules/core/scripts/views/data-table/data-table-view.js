@@ -96,14 +96,7 @@ DataTableView.prototype.render = function() {
   var scrollLeft = (oldTableDiv.length > 0) ? oldTableDiv[0].scrollLeft : 0;
 
   var html = $(
-    '<div class="viewpanel-header">' +
-      '<div class="viewpanel-rowrecord" bind="rowRecordControls">'+$.i18n('core-views/show-as')+': ' +
-        '<span bind="modeSelectors"></span>' + 
-      '</div>' +
-      '<div class="viewpanel-pagesize" bind="pageSizeControls"></div>' +
-      '<div class="viewpanel-sorting" bind="sortingControls"></div>' +
-      '<div class="viewpanel-paging" bind="pagingControls"></div>' +
-    '</div>' +
+    
     '<div bind="dataTableContainer" class="data-table-container">' +
       '<table class="data-table">'+
         '<thead bind="tableHeader" class="data-table-header">'+
@@ -111,6 +104,14 @@ DataTableView.prototype.render = function() {
         '<tbody bind="table" class="data-table">'+
         '</tbody>'+
       '</table>' +
+    '</div>' +
+    '<div class="viewpanel-header">' +
+      '<div class="viewpanel-rowrecord" bind="rowRecordControls">'+$.i18n('core-views/show-as')+': ' +
+        '<span bind="modeSelectors"></span>' + 
+      '</div>' +
+      '<div class="viewpanel-pagesize" bind="pageSizeControls"></div>' +
+      '<div class="viewpanel-sorting" bind="sortingControls"></div>' +
+      '<div class="viewpanel-paging" bind="pagingControls"></div>' +
     '</div>'
   );
   var elmts = DOM.bind(html);
