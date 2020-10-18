@@ -72,8 +72,11 @@ function resize() {
 
   var leftPanelPaddings = ui.leftPanelDiv.outerHeight(true) - ui.leftPanelDiv.height();
   ui.leftPanelDiv
-  .css("top", top + "px")
+  // .css("top", top + "px")
+  .css("top", "40px")
   .css("left", "0px")
+  // .css("right", "0px")
+
   .css("height", (height - leftPanelPaddings) + "px")
   .css("width", leftPanelWidth + "px");
 
@@ -85,6 +88,7 @@ function resize() {
   ui.rightPanelDiv
   .css("top", top + "px")
   .css("left", leftPanelWidth + "px")
+  // .css("left", "0px")
   .css("height", (height - rightPanelVPaddings) + "px")
   .css("width", (width - leftPanelWidth - rightPanelHPaddings) + "px");
 
@@ -93,7 +97,8 @@ function resize() {
   var processPanelWidth = 400;
   ui.processPanelDiv
   .css("width", processPanelWidth + "px")
-  .css("left", Math.floor((width - processPanelWidth) / 2) + "px");
+  // .css("left", Math.floor((width - processPanelWidth) / 2) + "px");
+  .css("right", "0" + "px");
 }
 
 function resizeTabs() {

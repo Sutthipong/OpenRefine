@@ -171,7 +171,9 @@ Refine.DatabaseImportController.prototype._showParsingPanel = function() {
       .css("left", "0px")
       .css("top", headerHeight + "px")
       .css("width", (width - DOM.getHPaddings(elmts.dataPanel)) + "px")
+      .css("background-color", "#000")
       .css("height", (height - headerHeight - controlPanelHeight - DOM.getVPaddings(elmts.dataPanel)) + "px");
+      
       elmts.progressPanel
       .css("left", "0px")
       .css("top", headerHeight + "px")

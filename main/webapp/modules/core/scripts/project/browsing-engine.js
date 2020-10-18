@@ -229,7 +229,7 @@ BrowsingEngine.prototype.removeFacet = function(facet) {
   if (update) {
     Refine.update({ engineChanged: true });
   } else if (this._facets.length === 0) {
-    this._elmts.help.show();
+    // this._elmts.help.show();
     this._elmts.header.hide();
   }
 };

@@ -180,7 +180,8 @@ $(function() {
     .css("visibility", "visible");
 
     $('#left-panel')
-    .css("left", "0px")
+    // .css("left", "0px")
+    .css("right", "0px")
     .css("width", leftPanelWidth + "px");
     var leftPanelBodyHPaddings = 10;
     // px
@@ -193,7 +194,8 @@ $(function() {
     .css("height", ($('#left-panel').height() - leftPanelBodyVPaddings) + "px");
 
     $('#right-panel')
-    .css("left", leftPanelWidth + "px")
+    // .css("left", leftPanelWidth + "px")
+    .css("left", "0" + "px")
     .css("width", (width - leftPanelWidth) + "px");
 
     var rightPanelBodyHPaddings = 5;

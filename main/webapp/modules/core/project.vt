@@ -50,27 +50,30 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
   </head>
   <body style="font-size: 11px;">
-    <div id="header">
-      <a id="app-home-button" href="./"><img alt="CUBIKA&trade; Data-Refiner" src="images/logo-openrefine-550.png" height="29" /></a>
-      <div id="project-title">
-        <span id="project-name-button" class="app-path-section"></span>
-        <!--
-        <a id="project-permalink-button" href="javascript:{}" class="secondary"></a>
-        -->
-      </div>
-      <div id="project-controls">
-        <!--
-        <a href="./" class="button" target="_blank"><span id="or-proj-open"></span></a>
-        <a class="button" bind="exportButton" id="export-button" href="#export"><span class="button-menu" id="or-proj-export"></span></a>
-        <a href="https://github.com/OpenRefine/OpenRefine/wiki/Documentation-For-Users" target="_blank" class="button"><span id="or-proj-help"></span></a>
-        -->
+    <div style="width: calc(100%);">
+      <div id="header">
+        <a id="app-home-button" href="./"><img alt="CUBIKA&trade; Data-Refiner" src="images/logo-openrefine-550.png" height="29" style="margin-top: 0px;"/></a>
+        <div id="project-title">
+          <!--
+          <span id="project-name-button" class="app-path-section"></span>
+          -->
+          <!--
+          <a id="project-permalink-button" href="javascript:{}" class="secondary"></a>
+          -->
+        </div>
+        <div id="project-controls">
+          <!--
+          <a href="./" class="button" target="_blank"><span id="or-proj-open"></span></a>
+          <a class="button" bind="exportButton" id="export-button" href="#export"><span class="button-menu" id="or-proj-export"></span></a>
+          <a href="https://github.com/OpenRefine/OpenRefine/wiki/Documentation-For-Users" target="_blank" class="button"><span id="or-proj-help"></span></a>
+          -->
+        </div>
       </div>
     </div>
-    
     <div id="loading-message"><img src="images/large-spinner.gif" /> <span id="or-proj-starting"></span></div>
       
     <div id="body">
-      <div bind="leftPanelDiv" id="left-panel" style="left: 0px; background-color: whitesmoke; border-width: 0px; border-right-width: 2px; margin-right: 5px;">
+      <div bind="leftPanelDiv" id="left-panel" style="background-color: whitesmoke; border-width: 0px; top: 40px;">
         <div bind="leftPanelTabs" class="refine-tabs" style="border: 1px;">
           <ul>
             <li><a href="#refine-tabs-facets" id="or-proj-facFil"></a></li>
@@ -80,9 +83,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           <div id="refine-tabs-history" bind="historyPanelDiv" id="history-panel"></div>
         </div>
       </div>
-      <div bind="rightPanelDiv" id="right-panel" style="left: 300px; background-color: whitesmoke; top: 40px; height: 939px; width: 921px;">
-        <div bind="toolPanelDiv" id="tool-panel" style="height: 36px;">
-          <font style="font-size: 1.8em; font-weight: normal;">&nbsp;&nbsp;Data&nbsp;</font>
+      <div bind="rightPanelDiv" id="right-panel" style="background-color: whitesmoke; top: 40px; height: 939px; width: 921px;">
+        <div bind="toolPanelDiv" id="tool-panel" style="height: 39px;">
+          <span id="project-name-button" class="app-path-section"></span>&nbsp;
           <div bind="summaryBarDiv" id="summary-bar" style="padding-left: 0px;">
             <!-- row/record counts -->
           </div>
