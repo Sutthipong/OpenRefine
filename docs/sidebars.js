@@ -16,9 +16,12 @@ module.exports = {
       items: ['manual/transforming', 'manual/cellediting','manual/columnediting','manual/transposing'],
     },
       'manual/reconciling',
-      'manual/expressions',
       'manual/wikidata',
-      'manual/expressions',
+	    {
+      type: 'category',
+      label: 'Expressions',
+      items: ['manual/expressions', 'manual/grelfunctions'],
+    },
       'manual/exporting',
       'manual/glossary',
       'manual/troubleshooting'
@@ -38,6 +41,7 @@ module.exports = {
       'technical-reference/writing-extensions',
       'technical-reference/migrating-older-extensions',
       'technical-reference/translating',
+      'technical-reference/functional-tests'
   ]
   },
 };
