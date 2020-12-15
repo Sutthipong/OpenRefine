@@ -52,7 +52,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <body style="font-size: 11px;">
     <div style="width: calc(100%);">
       <div id="header">
-        <a id="app-home-button" href="./"><img alt="CUBIKA&trade; Data-Refiner" src="images/logo-openrefine-550.png" height="29" style="margin-top: 0px;"/></a>
+        <a id="app-home-button" href="./"><img alt="CUBIKA&trade; Data-Refiner" src="images/logo-openrefine-550.png" height="29" style="margin-top: 0px;"/><h1>&nbsp;Data-Refiner</h1></a>
         <div id="project-title">
           <!--
           <span id="project-name-button" class="app-path-section"></span>
